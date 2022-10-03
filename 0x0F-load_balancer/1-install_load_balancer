@@ -4,18 +4,20 @@
 sudo apt-get update
 sudo apt-get install -y haproxy
 
+DOMAIN_NAME='vincentondeng.tech'
+INIT_FILE='/etc/default/haproxy'
+
 echo "ENABLED=1" >> /etc/default/haproxy
 
 echo "
-    listen load_balancer
-    bind *:80
-    mode http
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    server 20553-web-01 34.236.38.211 check
-    server 20553-web-02 3.236.255.72 check
-    option httpchk
+    frontend vincentondeng.tech
+    	bind *:80
+    	mode http
+    	default_backend vincentondeng.tech
+    backend vincentondeng.tech
+    	balance roundrobin
+	server 20553-web-01 34.236.38.211:80 check
+    	server 20553-web-02 3.236.255.72:80 check
 " >> /etc/haproxy/haproxy.cfg
 
 sudo service haproxy start
